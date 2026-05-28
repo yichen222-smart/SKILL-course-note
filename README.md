@@ -9,7 +9,7 @@
 把本仓库链接发给你的 Claude Code 或 Codex，告诉它"部署这个 skill"，它会自动完成以下操作：
 
 ```
-https://github.com/yichen222-smart/SKILL-note-course
+https://github.com/yichen222-smart/SKILL-course-note
 ```
 
 ### 方法二：手动部署
@@ -19,7 +19,7 @@ https://github.com/yichen222-smart/SKILL-note-course
 pip install pymupdf python-pptx
 
 # 2. 安装 skill 到 Claude Code
-npx skills add https://github.com/yichen222-smart/SKILL-note-course
+npx skills add https://github.com/yichen222-smart/SKILL-course-note
 ```
 
 ## 功能
