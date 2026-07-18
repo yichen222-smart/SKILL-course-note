@@ -4,11 +4,15 @@ description: >
   通用课堂笔记/复习提纲生成。根据课件（PDF/PPTX）自动生成 Obsidian 格式的结构化课堂笔记。
   当用户提到以下内容时触发：做笔记、整理笔记、课堂笔记、复习提纲、课件整理、根据课件生成笔记、做复习提纲、整理课件、做提纲。
   或者用户提供课件文件路径并要求生成笔记/提纲时触发。
+  注意：不要与 financial-english-outline 混淆（后者是专门针对《金融英语阅读教程》扫描版PDF的）。
+  此 skill 适用于任何课程的课件，支持 PDF 和 PPTX 格式。
 ---
 
 # 通用课堂笔记生成 Skill
 
-读取任意课程的课件文件（PDF 或 PPTX），根据课件内容自动生成 Obsidian 格式的结构化课堂笔记/复习提纲。笔记风格强调层级清晰、重点突出、格式规范。
+## 功能概述
+
+读取任意课程的课件文件（PDF 或 PPTX），根据课件内容自动生成 Obsidian 格式的结构化课堂笔记/复习提纲。笔记风格参考财政学笔记格式，强调层级清晰、重点突出、格式规范。
 
 ## 核心工作流程
 
@@ -52,7 +56,7 @@ with open('_temp_courseware.json', 'w', encoding='utf-8') as f:
     json.dump(pages, f, ensure_ascii=False, indent=2)
 print(f'Extracted {len(pages)} pages with content')
 doc.close()
-" "<课件文件路径.pdf>"
+" "D:/Obsidian Vault/课件文件路径.pdf"
 ```
 
 #### PPTX 文件（.pptx）
@@ -78,7 +82,7 @@ with open('_temp_courseware.json', 'w', encoding='utf-8') as f:
     json.dump(slides, f, ensure_ascii=False, indent=2)
 print(f'Extracted {len(slides)} slides with content')
 prs.close()
-" "<课件文件路径.pptx>"
+" "D:/Obsidian Vault/课件文件路径.pptx"
 ```
 
 提取后用 Read 工具分块读取 `_temp_courseware.json`，读取完成后删除临时文件：
@@ -95,7 +99,7 @@ rm "_temp_courseware.json"
 - **章节标题**：从课件主标题提取
 - **大节/小节**：从课件中的标题层级识别
 
-文件名规则：`第X章 标题.md`
+文件名规则：`第X章 标题.md`（X 为章节编号）
 默认存储路径：`课程名/笔记/第X章 标题.md`
 如果用户指定了其他路径，使用用户提供的路径。
 
@@ -139,7 +143,7 @@ rm "_temp_courseware.json"
 | **核心结论** | 重要推导结果用 `核心结论：` 引导 |
 | **优缺点** | `优点：` / `缺点：` 或 `积极影响：` / `负面影响：` 分行列举 |
 | **表格** | 课件中的对比表格保留并用 Markdown 表格重绘 |
-| **公式** | 数学/经济学公式用 `公式：` 引导，使用简洁的文本表达 |
+| **公式** | 数学/经济学公式用 `公式：` 引导，**全部使用 LaTeX 语法**（行内公式用 `$...$`，独立公式用 `$$...$$`） |
 
 #### 语言风格
 
@@ -177,12 +181,33 @@ rm "_temp_courseware.json"
 
 **投票悖论（voting paradox）**：又称孔多塞悖论，指在多数票规则下，投票结果可能出现循环多数，无法达成稳定均衡。
 
-案例：三个投票者对三个方案进行投票，可能出现 A>B>C>A 的循环。
+案例：三个投票者对三个方案进行投票，可能出现 $A \succ B \succ C \succ A$ 的循环。
 
 思考：如何打破投票悖论？——设定议程、限制选择范围等。
 
 ==多数票规则下，只有单峰偏好才能保证投票结果的稳定性与唯一性。==
+
+### 公式示例
+
+行内公式用单美元符包裹：需求价格弹性 $E_d = \frac{\Delta Q/Q}{\Delta P/P}$
+
+独立公式用双美元符包裹：
+
+$$
+\frac{\partial U}{\partial x} = \lambda p_x
+$$
 ```
+
+## 参考范例
+
+可参考 vault 中已有的财政学笔记格式：
+- [[财政学/笔记/第0章 导论 财政与财政学.md]]
+- [[财政学/笔记/第1章 效率、公平与政府.md]]
+- [[财政学/笔记/第2章 公共产品.md]]
+- [[财政学/笔记/第3章 公共选择理论.md]]
+- [[财政学/笔记/第4章 财政支出理论.md]]
+
+如果 vault 中有对应课程已有的笔记，也请参考其风格保持一致。
 
 ## 注意事项
 
@@ -192,13 +217,10 @@ rm "_temp_courseware.json"
 4. 生成笔记后，在回复中给出文件链接方便用户打开查看
 5. 如果课件文字提取结果不理想（如扫描版），告知用户并提供替代方案
 
-## 前置依赖
+## 与类似 skill 的区分
 
-使用本 skill 需要安装以下 Python 包：
-
-```bash
-pip install pymupdf python-pptx
-```
-
-- **PyMuPDF（fitz）**：用于提取 PDF 课件中的文字
-- **python-pptx**：用于提取 PPTX 课件中的文字
+| Skill | 适用场景 |
+|-------|---------|
+| **course-note（本 skill）** | 任何课程的 PDF/PPTX 课件 → 结构化笔记 |
+| **financial-english-outline** | 金融英语阅读教程扫描版 PDF → 章节复习提纲 |
+| **knowledge-card** | 从已有资料中提取重点 → 知识卡片/思维导图 |
